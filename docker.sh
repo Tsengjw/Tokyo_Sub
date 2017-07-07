@@ -1,5 +1,11 @@
 #!/bin/bash
 
+docker stop app
+docker stop chen
+docker rm app
+docker rm chen
+docker rmi app
+
 
 docker build -t app .
 

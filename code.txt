@@ -1,0 +1,18 @@
+load csv with headers from "file:///Tokyo_subway_system.csv" as csvLine
+create (s:Station {id: toInt(csvLine.id), station_No: csvLine.station_No, station_Name: csvLine.station_Name, station_English: csvLine.station_English, line_Name: csvLine.line_Name ,line_English: csvLine.line_English, latitude: csvLine.latitude, longitade: csvLine.longitade})
+
+load csv with headers from "file:///routes.csv" as csvLine
+create (r:Route {id: toInt(csvLine.id), distance: csvLine.distance, time: csvLine.time})
+
+CREATE INDEX ON:Station(id);
+
+CREATE INDEX ON:Route(id);
+
+USING PERIODIC COMMIT 500
+load csv with headers from "file:///relations.csv" as csvLine
+MATCH (s1:Station { id: toInt(csvLine.fromId)}),(r:Route { id: toInt(csvLine.route_informationId)}),(s2:Station { id: toInt(csvLine.toId)})
+CREATE UNIQUE (s1)<-[:FROM]->(r)
+CREATE UNIQUE(r)<-[:TO]->(s2)
+
+
+:config initialNodeDisplay: 300 <---зя1000
